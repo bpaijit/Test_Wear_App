@@ -9,8 +9,15 @@
     tools:context="planbdevs.com.testwearapp.AuctionsActivity">
 
     <TextView
+        android:id="@+id/tvAuctionHeader"
         android:text="@string/currentAuctions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <ListView
+        android:id="@+id/lvAuctions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAuctionHeader"
+        ></ListView>
 </RelativeLayout>

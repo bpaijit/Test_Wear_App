@@ -8,6 +8,7 @@ import planbdevs.com.testwearapp.R;
 
 public class BidActivity extends ActionBarActivity {
 
+	//Used to receive an updated bid from the wearable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
