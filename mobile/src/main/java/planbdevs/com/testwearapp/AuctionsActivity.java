@@ -73,6 +73,7 @@ public class AuctionsActivity extends ActionBarActivity {
 		if (item != null)
 		{
 			Intent iBid = new Intent(this, BidActivity.class);
+			iBid.putExtra("AuctionItem", item);
 			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, iBid, 0);
 
 			NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this)
@@ -111,17 +112,19 @@ public class AuctionsActivity extends ActionBarActivity {
 		@Override
 		public int getPosition(AuctionItem item)
 		{
-			int index = 0;
+			/*int index = 0;
 
 			for(AuctionItem i : mAuctions)
 			{
-				if (i.equals(mAuctions.get(index)))
+				if (!i.equals(item))
+				{
+					index++;
+				}
+				else
 				{
 					return index;
 				}
-
-				index++;
-			}
+			}*/
 
 			return 0;
 		}
