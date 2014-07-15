@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Test Wear App</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_auctions">Auctions Activity</string>
+    <string name="currentAuctions">Current Auctions</string>
+    <string name="auction_item_bmw_name">Electric BMW</string>
+    <string name="auction_item_bmw_description">The BMW i8 is ready to revolutionise its vehicle class. As the first sports car with the consumption and emission values of a compact car. The strength of the plug-in hybrid lies, among other factors, in the perfect synchronisation of electric motor and combustion engine, which makes itself apparent in maximum efficiency and dynamics on the road. The first sports car that even accelerates the zeitgeist.</string>
+    <string name="auction_item_watch_name">Moto 360</string>
+    <string name="auction_item_watch_description">It\'s the boldest and most stylish smartwatch of the bunch. According to Google, the round design is meant to appeal to both genders while ditching the sharp corners that can dig into your wrist. Promises aside, the shape is an improvement over the square designs that we normally see and it makes the Moto 360 look like a regular fashion watch from a distance.</string>
+    <string name="auction_item_tv_name">65" Ultra HD TV</string>
+    <string name="auction_item_tv_description">With over 8 Million pixels, 4K Ultra HD creates a picture so clear, and lifelike it redefines the bigscreen experience without taking up any more space for truly immersive cinema-quality entertainment in the comfort of your own home.</string>
+    <string name="title_activity_bid">BidActivity</string>
+    <string name="highes_bidder">You are now the highest bidder</string>
+
+</resources>
