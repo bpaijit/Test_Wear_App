@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,10 +21,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.WearableStatusCodes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +46,9 @@ import planbdevs.com.palnbdevs.com.bases.EbayApplication;
 import planbdevs.com.testwearapp.R;
 
 public class AuctionsActivity extends ActionBarActivity {
+	public static final String TAG = AuctionsActivity.class.getSimpleName();
+	private static final String START_ACTIVITY_PATH = "/start/BidActivity";
+
 	ListView lvAuctionItems = null;
 	GoogleApiClient mGoogleApiClient;
 
@@ -53,6 +62,7 @@ public class AuctionsActivity extends ActionBarActivity {
 
 	    mApp = (EbayApplication) getApplication();
 	    mAuctions = mApp.mAuctionItems;
+
 	    mGoogleApiClient = new GoogleApiClient.Builder(this)
 			    .addApi(Wearable.API)
 			    .build();
@@ -63,7 +73,8 @@ public class AuctionsActivity extends ActionBarActivity {
 	    lvAuctionItems.setAdapter(new AuctionAdapter(this, 1));
 
 	    startBidding();
-	    //sendNotification(mAuctions.get(0));
+	    sendNotification(mAuctions.get(0));
+	    fireMessage();
     }
 
     @Override
@@ -156,21 +167,58 @@ public class AuctionsActivity extends ActionBarActivity {
 		Node node = getNodes();
 
 		GoogleApiClient client = null;
-		String START_ACTIVITY_PATH = "/start/BidActivity";
-		//MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node, START_ACTIVITY_PATH,  null);
+
+		MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node, START_ACTIVITY_PATH,  null);
 	}*/
+
+	private void fireMessage() {
+		// Send the RPC
+		PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+		nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+			@Override
+			public void onResult(NodeApi.GetConnectedNodesResult result) {
+				for (int i = 0; i < result.getNodes().size(); i++) {
+					Node node = result.getNodes().get(i);
+					String nName = node.getDisplayName();
+					String nId = node.getId();
+					Log.d(TAG, "Node name and ID: " + nName + " | " + nId);
+
+					Wearable.MessageApi.addListener(mGoogleApiClient, new MessageApi.MessageListener() {
+						@Override
+						public void onMessageReceived(MessageEvent messageEvent) {
+							Log.d(TAG, "Message received: " + messageEvent);
+						}
+					});
+
+					PendingResult<MessageApi.SendMessageResult> messageResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),START_ACTIVITY_PATH, null);
+					messageResult.setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+						@Override
+						public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+							Status status = sendMessageResult.getStatus();
+							Log.d(TAG, "Status: " + status.toString());
+							if (status.getStatusCode() != WearableStatusCodes.SUCCESS) {
+								/*alertButton.setProgress(-1);
+								label.setText("Tap to retry. Alert not sent :(");*/
+							}
+						}
+					});
+				}
+			}
+		});
+	}
 
 	/*private Node getNodes()
 	{
 		HashSet<String> results = new HashSet<String>();
-		*//*NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+		NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
 
 		for(Node node : nodes.getNodes())
 		{
 			return node;
-		}*//*
+		}
 
 	}*/
+
 	public class AuctionAdapter extends ArrayAdapter<AuctionItem>
 	{
 		public AuctionAdapter(Context context, int resource)

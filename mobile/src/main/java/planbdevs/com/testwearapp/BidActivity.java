@@ -37,11 +37,11 @@ public class BidActivity extends ActionBarActivity {
 			    item.setHighestBid(item.getHighestBid() + 1);
 			    item.setLastBidDate(Calendar.getInstance().getTimeInMillis());
 			    int index = mAuctions.indexOf(item);
-			    if(index >= 0)
+			    /*if(index >= 0)
 			    {
 				    mAuctions.remove(index);
 			    }
-			    mAuctions.add(item);
+			    mAuctions.add(item);*/
 		    }
 	    }
     }
