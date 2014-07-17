@@ -4,6 +4,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Calendar;
+import java.util.List;
+
+import planbdevs.com.classes.AuctionItem;
+import planbdevs.com.palnbdevs.com.bases.EbayApplication;
 import planbdevs.com.testwearapp.R;
 
 public class BidActivity extends ActionBarActivity {
@@ -13,6 +19,31 @@ public class BidActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bid);
+
+	    List<AuctionItem> mAuctions = null;
+	    EbayApplication mApp = null;
+
+	    mApp = (EbayApplication) getApplication();
+	    mAuctions = mApp.mAuctionItems;
+
+	    Bundle b = getIntent().getExtras();
+
+	    if (b != null)
+	    {
+		    AuctionItem item = (AuctionItem)b.get("AuctionItem");
+
+		    if(item != null)
+		    {
+			    item.setHighestBid(item.getHighestBid() + 1);
+			    item.setLastBidDate(Calendar.getInstance().getTimeInMillis());
+			    int index = mAuctions.indexOf(item);
+			    if(index >= 0)
+			    {
+				    mAuctions.remove(index);
+			    }
+			    mAuctions.add(item);
+		    }
+	    }
     }
 
 

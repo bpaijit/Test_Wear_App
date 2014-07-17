@@ -4,5 +4,6 @@
     <string name="app_name">Test Wear App</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
+    <string name="title_activity_bid">BidActivity</string>
 
 </resources>

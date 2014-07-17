@@ -106,8 +106,8 @@ public class AuctionItem implements Parcelable
 		this.imageId = Integer.parseInt(data[1]);
 		this.name = data[2];
 		this.description = data[3];
-		this.highestBid = Integer.parseInt(data[4]);
-		this.lastBidDate = Integer.parseInt(data[5]);
+		this.highestBid = Float.parseFloat(data[4]);
+		this.lastBidDate = Long.parseLong(data[5]);
 	}
 	@Override
 	public void writeToParcel(Parcel dest, int flags)
@@ -123,4 +123,15 @@ public class AuctionItem implements Parcelable
 
 	}
 
+	public static final Creator CREATOR = new Creator<AuctionItem>()
+	{
+		public AuctionItem createFromParcel(Parcel in)
+		{
+			return new AuctionItem(in);
+		}
+		public AuctionItem[] newArray(int size)
+		{
+			return new AuctionItem[size];
+		}
+	};
 }

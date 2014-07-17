@@ -18,6 +18,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BidActivity"
+            android:label="@string/title_activity_bid"
+            android:allowEmbedded="true"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.DeviceDefault.Light"
+            >
+        </activity>
     </application>
 
 </manifest>
