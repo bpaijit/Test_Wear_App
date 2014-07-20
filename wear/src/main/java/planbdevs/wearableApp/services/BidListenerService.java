@@ -1,6 +1,8 @@
 package planbdevs.wearableApp.services;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.FreezableUtils;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
@@ -16,7 +19,10 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,41 +52,7 @@ public class BidListenerService extends WearableListenerService
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents)
 	{
-		//Get the passed in data items
-		final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
-		dataEvents.close();
-
-		//Make sure the app is connected to the Wearable API
-		if (!mGoogleApiClient.isConnected())
-		{
-			ConnectionResult connectionResult = mGoogleApiClient.blockingConnect(30, TimeUnit.SECONDS);
-
-			if (!connectionResult.isSuccess())
-			{
-				Log.e(TAG, "BidListenerService failed to connect to GoogleApiClient.");
-				return;
-			}
-		}
-
-		//Find the node that sent the data
-		String nodeId = "";
-
-		for(DataEvent event : events)
-		{
-			Uri uri = event.getDataItem().getUri();
-
-			if(uri != null)
-			{
-				nodeId = uri.getHost();
-			}
-
-			if (!nodeId.isEmpty())
-			{
-				Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, DATA_ITEM_RECEIVED_PATH, null);
-			}
-		}
-
-
+		LogD("onDataChanged");
 	}
 
 	@Override
@@ -93,9 +65,13 @@ public class BidListenerService extends WearableListenerService
 
 			Intent iBid = new Intent(this, BidActivity.class);
 			Bundle bundle = new Bundle();
-			DataMap data = DataMap.fromByteArray(messageEvent.getData());
+			byte[] messageData = messageEvent.getData();
+			ByteBuffer buffer = ByteBuffer.wrap(messageData);
+
+			DataMap data = DataMap.fromByteArray(buffer.array());
 			bundle.putInt("id", data.getInt("id"));
 			bundle.putFloat("bid", data.getFloat("bid"));
+			//bundle.putByteArray("image", getBitmapBytesFromAsset(data.getAsset("image")));
 
 			iBid.putExtra("extras", bundle);
 			iBid.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -111,24 +87,33 @@ public class BidListenerService extends WearableListenerService
 		}
 	}
 
-	private AuctionItemWear convertToObject(byte[] bytes)
+	private byte[] getBitmapBytesFromAsset(Asset asset)
 	{
-		AuctionItemWear returnObject = null;
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		Bitmap bitmap = loadBitmapFromAsset(asset);
 
-		try
+		if (bitmap != null)
 		{
-			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-			ObjectInputStream stream = new ObjectInputStream(in);
-			Object obj = stream.readObject();
-			returnObject = (AuctionItemWear) stream.readObject();
-
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, ex.getMessage());
-
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		}
 
-		return returnObject;
+		return stream.toByteArray();
+	}
+	private Bitmap loadBitmapFromAsset(Asset asset)
+	{
+		Bitmap returnBitmap = null;
+
+		if (asset != null)
+		{
+			InputStream assetStream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset).await().getInputStream();
+			mGoogleApiClient.disconnect();
+
+			if(assetStream != null)
+			{
+				returnBitmap = BitmapFactory.decodeStream(assetStream);
+			}
+		}
+
+		return returnBitmap;
 	}
 }

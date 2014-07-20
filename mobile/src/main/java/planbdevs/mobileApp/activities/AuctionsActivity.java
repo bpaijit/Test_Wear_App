@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -25,6 +26,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.data.FreezableUtils;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -40,6 +42,7 @@ import com.google.android.gms.wearable.WearableStatusCodes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -49,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 import planbdevs.mobileApp.R;
 import planbdevs.mobileApp.classes.AuctionItem;
 import planbdevs.mobileApp.bases.EbayApplication;
+import planbdevs.mobileApp.utilities.ImageUtilities;
 
 public class AuctionsActivity extends ActionBarActivity implements
                                                         DataApi.DataListener,
@@ -215,6 +219,9 @@ public class AuctionsActivity extends ActionBarActivity implements
 					data.putInt("id", auction.getAuctionId());
 					data.putFloat("bid", auction.getHighestBid());
 
+					Bitmap b = BitmapFactory.decodeResource(getResources(), auction.getImageId());
+					Asset a = ImageUtilities.createAssetFromBitmap(b);
+					//data.putAsset("image", a);
 
 					//PendingResult<MessageApi.SendMessageResult> messageResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),START_ACTIVITY_PATH, new byte[0]);
 					PendingResult<MessageApi.SendMessageResult> messageResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),START_ACTIVITY_PATH,data.toByteArray());
@@ -393,8 +400,8 @@ public class AuctionsActivity extends ActionBarActivity implements
 
 				ivPhoto.setImageDrawable(getResources().getDrawable(item.getImageId()));
 				tvAuctionItemName.setText(item.getName());
-				tvAuctionItemHighestBid.setText(String.valueOf(item.getHighestBid()));
-				tvAuctionItemLastBidDate.setText(String.valueOf(item.getLastBidDate()));
+				tvAuctionItemHighestBid.setText(String.format("$%.2f", item.getHighestBid()));
+				tvAuctionItemLastBidDate.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm aa").format(item.getLastBidDate()));
 			}
 
 
@@ -402,20 +409,4 @@ public class AuctionsActivity extends ActionBarActivity implements
 		}
 	}
 
-	private byte[] convertToBytes(Object obj)
-	{
-		try
-		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ObjectOutputStream stream = new ObjectOutputStream(out);
-			stream.writeObject(obj);
-
-			return out.toByteArray();
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, ex.getMessage());
-			return null;
-		}
-	}
 }

@@ -10,6 +10,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="The current bid is, "
+        android:id="@+id/tvBidCurrentLabel"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$1,384.84"
+        android:id="@+id/tvBidCurrentValue"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/max_bid_header"
         android:id="@+id/tvBidHeader"
         android:layout_gravity="center_horizontal"/>

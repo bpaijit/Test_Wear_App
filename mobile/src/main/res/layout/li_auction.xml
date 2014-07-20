@@ -2,7 +2,9 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@style/Widget.AppCompat.Light.Base.ActionBar">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -11,26 +13,54 @@
             android:src="@drawable/auction_image_bmw"
             android:layout_gravity="center|bottom"
             android:adjustViewBounds="true"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/tvAuctionItemName"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Highest Bid:  "
+            android:id="@+id/tvAuctionItemHighestBidLabel"
+            android:layout_below="@id/tvAuctionItemName"
+            android:layout_marginRight="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Large Text"
             android:id="@+id/tvAuctionItemHighestBid"
-            android:layout_gravity="center"/>
+            android:layout_toRightOf="@id/tvAuctionItemHighestBidLabel"
+            android:layout_alignTop="@+id/tvAuctionItemHighestBidLabel"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last Bid Date:  "
+            android:id="@+id/tvAuctionItemLastBidDateLabel"
+            android:layout_below="@id/tvAuctionItemHighestBidLabel"
+            android:layout_marginRight="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Large Text"
             android:id="@+id/tvAuctionItemLastBidDate"
-            android:layout_gravity="center"/>
+            android:layout_toRightOf="@id/tvAuctionItemLastBidDateLabel"
+            android:layout_alignTop="@+id/tvAuctionItemLastBidDateLabel"/>
+
+        </RelativeLayout>
+
     </LinearLayout>

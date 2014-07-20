@@ -20,6 +20,9 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import java.text.DecimalFormat;
+import java.util.Locale;
+
 import planbdevs.wearableApp.R;
 import planbdevs.wearableApp.classes.AuctionItemWear;
 
@@ -30,6 +33,8 @@ public class BidActivity extends Activity implements GoogleApiClient.ConnectionC
 	private final static String RESPONSE_PATH = "/bid_received";
 
 	private TextView tvBidHeader;
+	private TextView tvBidCurrentValue;
+
 	private Button bnBidSubmit;
 	private NumberPicker npMaxBid;
 	private int mId = 0;
@@ -62,10 +67,13 @@ public class BidActivity extends Activity implements GoogleApiClient.ConnectionC
 			public void onLayoutInflated(WatchViewStub stub)
 			{
 				tvBidHeader = (TextView) stub.findViewById(R.id.tvBidHeader);
+				tvBidCurrentValue = (TextView) stub.findViewById(R.id.tvBidCurrentValue);
 				bnBidSubmit = (Button) stub.findViewById(R.id.bnBidSubmit);
 				npMaxBid = (NumberPicker) stub.findViewById(R.id.npMaxBid);
 
-				npMaxBid.setMinValue((int)mBid);
+				//Set the values
+				tvBidCurrentValue.setText(String.format(Locale.US, "$%.2f", mBid));
+				npMaxBid.setMinValue((int) mBid);
 				npMaxBid.setMaxValue(9999);
 				npMaxBid.setWrapSelectorWheel(false);
 

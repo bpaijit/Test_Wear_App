@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="planbdevs.wearableApp.activities.BidActivity"
     tools:deviceIds="wear_round">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The current bid is, "
+        android:id="@+id/tvBidCurrentLabel"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$1,384.84"
+        android:id="@+id/tvBidCurrentValue"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,8 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/npMaxBid"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tvBidHeader"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
         />
 
     <Button
@@ -26,7 +41,6 @@
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/bnBidSubmit"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
-</RelativeLayout>
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
