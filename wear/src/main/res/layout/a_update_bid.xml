@@ -8,6 +8,6 @@
     android:layout_height="match_parent"
     app:rectLayout="@layout/rect_activity_bid"
     app:roundLayout="@layout/round_activity_bid"
-    tools:context="planbdevs.com.testwearapp.BidActivity"
+    tools:context="planbdevs.wearableApp.activities.BidActivity"
     tools:deviceIds="wear">
 </android.support.wearable.view.WatchViewStub>

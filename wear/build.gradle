@@ -6,7 +6,7 @@ android {
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "planbdevs.com.testwearapp"
+        applicationId "planbdevs.wear"
         minSdkVersion 20
         targetSdkVersion 20
         versionCode 1

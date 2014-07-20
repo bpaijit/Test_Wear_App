@@ -4,22 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="planbdevs.com.testwearapp.BidActivity"
+    tools:context="planbdevs.wearableApp.activities.BidActivity"
     tools:deviceIds="wear_square">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter new maximum bid:"
+        android:text="@string/max_bid_header"
         android:id="@+id/tvBidHeader"
         android:layout_gravity="center_horizontal"/>
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/npMaxBid"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
         android:id="@+id/bnBidSubmit"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_gravity="center_horizontal"/>
+
+
 </LinearLayout>
