@@ -4,10 +4,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -18,11 +21,21 @@ import planbdevs.mobileApp.bases.EbayApplication;
 
 public class BidActivity extends ActionBarActivity{
 
+	ImageView ivBidItemPhoto = null;
+
+	TextView tvAuctionItemHighestBid = null;
+	TextView tvAuctionItemLastBidDate = null;
+
 	//Used to receive an updated bid from the wearable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bid);
+
+	    ivBidItemPhoto = (ImageView) findViewById(R.id.ivBidItemPhoto);
+
+	    tvAuctionItemHighestBid = (TextView) findViewById(R.id.tvAuctionItemHighestBid);
+	    tvAuctionItemLastBidDate = (TextView) findViewById(R.id.tvAuctionItemLastBidDate);
 
 	    List<AuctionItem> mAuctions = null;
 	    EbayApplication mApp = null;
@@ -43,6 +56,10 @@ public class BidActivity extends ActionBarActivity{
 			    {
 				    a.setHighestBid(bidAmount);
 				    a.setLastBidDate(Calendar.getInstance(Locale.US).getTimeInMillis());
+
+				    ivBidItemPhoto.setImageDrawable(getResources().getDrawable(a.getImageId()));
+				    tvAuctionItemHighestBid.setText(String.format(Locale.US, "$%.2f", bidAmount));
+				    tvAuctionItemLastBidDate.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm aa").format(a.getLastBidDate()));
 			    }
 		    }
 	    }
