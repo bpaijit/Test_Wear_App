@@ -90,7 +90,7 @@ public class AuctionsActivity extends ActionBarActivity implements
 
 	    //startBidding();
 	    //sendNotification(mAuctions.get(0));
-		fireMessage();
+		//fireMessage();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class AuctionsActivity extends ActionBarActivity implements
 			iBid.putExtra("AuctionItem", (android.os.Parcelable) item);
 			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, iBid, 0);
 
-			PendingIntent pBidActivity = PendingIntent.getActivity(this, 1, iBid,PendingIntent.FLAG_UPDATE_CURRENT);
+			//PendingIntent pBidActivity = PendingIntent.getActivity(this, 1, iBid,PendingIntent.FLAG_UPDATE_CURRENT);
 
 			NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this)
 					.setSmallIcon(R.drawable.ebay)
@@ -178,18 +178,11 @@ public class AuctionsActivity extends ActionBarActivity implements
 		}
 	}
 
-	/*private void sendMessage()
-	{
-		Node node = getNodes();
 
-		GoogleApiClient client = null;
-
-		MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(mGoogleApiClient, node, START_ACTIVITY_PATH,  null);
-	}*/
-
-	private void fireMessage() {
+	private void fireMessage(final int index) {
 		// Send the RPC
 		PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+
 		nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
 			@Override
 			public void onResult(NodeApi.GetConnectedNodesResult result) {
@@ -206,7 +199,7 @@ public class AuctionsActivity extends ActionBarActivity implements
 						}
 					});
 
-					AuctionItem auction = mAuctions.get(0);
+					AuctionItem auction = mAuctions.get(index);
 
 					/*PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(getString(R.string.bid_path));
 					putDataMapRequest.getDataMap().putInt(getString(R.string.key_auctionId), auction.getAuctionId());
@@ -251,7 +244,7 @@ public class AuctionsActivity extends ActionBarActivity implements
 		Wearable.MessageApi.addListener(mGoogleApiClient, this);
 		Wearable.NodeApi.addListener(mGoogleApiClient, this);
 
-		fireMessage();
+		//fireMessage();
 	}
 
 	@Override
@@ -324,20 +317,6 @@ public class AuctionsActivity extends ActionBarActivity implements
 
 	}
 
-
-
-	/*private Node getNodes()
-	{
-		HashSet<String> results = new HashSet<String>();
-		NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
-
-		for(Node node : nodes.getNodes())
-		{
-			return node;
-		}
-
-	}*/
-
 	public class AuctionAdapter extends ArrayAdapter<AuctionItem>
 	{
 		public AuctionAdapter(Context context, int resource)
@@ -384,7 +363,7 @@ public class AuctionsActivity extends ActionBarActivity implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent)
+		public View getView(final int position, View convertView, ViewGroup parent)
 		{
 			if (convertView == null)
 			{
@@ -404,7 +383,13 @@ public class AuctionsActivity extends ActionBarActivity implements
 				tvAuctionItemLastBidDate.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm aa").format(item.getLastBidDate()));
 			}
 
-
+			convertView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v)
+				{
+					fireMessage(position);
+				}
+			});
 			return convertView;
 		}
 	}

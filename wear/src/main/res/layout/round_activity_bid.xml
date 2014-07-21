@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="planbdevs.wearableApp.activities.BidActivity"
-    tools:deviceIds="wear_round">
+    tools:deviceIds="wear_round"
+    android:background="@drawable/card_background"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,17 +32,21 @@
 
     <NumberPicker
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:id="@+id/npMaxBid"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
+        android:layout_marginBottom="5dp"
         />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
         android:text="Submit"
         android:id="@+id/bnBidSubmit"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        />
+
 
 </LinearLayout>
