@@ -179,6 +179,44 @@ public class AuctionsActivity extends ActionBarActivity implements
 	}
 
 
+	private void fireMessageWithImage(final int index) {
+		// Send the RPC
+		PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+
+		nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+			@Override
+			public void onResult(NodeApi.GetConnectedNodesResult result) {
+				for (int i = 0; i < result.getNodes().size(); i++) {
+					Node node = result.getNodes().get(i);
+					String nName = node.getDisplayName();
+					String nId = node.getId();
+					Log.d(TAG, "Node name and ID: " + nName + " | " + nId);
+
+					Wearable.MessageApi.addListener(mGoogleApiClient, new MessageApi.MessageListener() {
+						@Override
+						public void onMessageReceived(MessageEvent messageEvent) {
+							Log.d(TAG, "Message received: " + messageEvent);
+						}
+					});
+
+					AuctionItem auction = mAuctions.get(index);
+
+					Bitmap b = BitmapFactory.decodeResource(getResources(), auction.getImageId());
+					Asset a = ImageUtilities.createAssetFromBitmap(b);
+
+					PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(getString(R.string.bid_path));
+					DataMap map = putDataMapRequest.getDataMap();
+					map.putInt(getString(R.string.key_auctionId), auction.getAuctionId());
+					map.putFloat(getString(R.string.key_highestbid), auction.getHighestBid());
+					map.putAsset("image", a);
+					PutDataRequest request = putDataMapRequest.asPutDataRequest();
+					PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleApiClient, request);
+
+				}
+			}
+		});
+	}
+
 	private void fireMessage(final int index) {
 		// Send the RPC
 		PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
@@ -201,34 +239,23 @@ public class AuctionsActivity extends ActionBarActivity implements
 
 					AuctionItem auction = mAuctions.get(index);
 
-					/*PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(getString(R.string.bid_path));
-					putDataMapRequest.getDataMap().putInt(getString(R.string.key_auctionId), auction.getAuctionId());
-					putDataMapRequest.getDataMap().putFloat(getString(R.string.key_highestbid), auction.getHighestBid());
-					PutDataRequest request = putDataMapRequest.asPutDataRequest();
-
-					Wearable.DataApi.putDataItem(mGoogleApiClient, request);*/
-
 					DataMap data = new DataMap();
 					data.putInt("id", auction.getAuctionId());
 					data.putFloat("bid", auction.getHighestBid());
 
-					Bitmap b = BitmapFactory.decodeResource(getResources(), auction.getImageId());
-					Asset a = ImageUtilities.createAssetFromBitmap(b);
-					//data.putAsset("image", a);
-
-					//PendingResult<MessageApi.SendMessageResult> messageResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),START_ACTIVITY_PATH, new byte[0]);
 					PendingResult<MessageApi.SendMessageResult> messageResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(),START_ACTIVITY_PATH,data.toByteArray());
+
 					messageResult.setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
 						@Override
 						public void onResult(MessageApi.SendMessageResult sendMessageResult) {
 							Status status = sendMessageResult.getStatus();
 							Log.d(TAG, "Status: " + status.toString());
 							if (status.getStatusCode() != WearableStatusCodes.SUCCESS) {
-								/*alertButton.setProgress(-1);
-								label.setText("Tap to retry. Alert not sent :(");*/
+
 							}
 						}
 					});
+
 				}
 			}
 		});
@@ -244,7 +271,6 @@ public class AuctionsActivity extends ActionBarActivity implements
 		Wearable.MessageApi.addListener(mGoogleApiClient, this);
 		Wearable.NodeApi.addListener(mGoogleApiClient, this);
 
-		//fireMessage();
 	}
 
 	@Override
@@ -286,16 +312,6 @@ public class AuctionsActivity extends ActionBarActivity implements
 		final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
 		dataEvents.close();
 
-		/*runOnUiThread() ->
-		{
-			for (DataEvent event : events)
-			{
-				if (event.getType() == DataEvent.TYPE_CHANGED)
-				{
-
-				}
-			}
-		};*/
 	}
 
 	@Override
@@ -383,11 +399,16 @@ public class AuctionsActivity extends ActionBarActivity implements
 				tvAuctionItemLastBidDate.setText(new SimpleDateFormat("MM/dd/yyyy hh:mm aa").format(item.getLastBidDate()));
 			}
 
-			convertView.setOnClickListener(new View.OnClickListener() {
+			convertView.setOnClickListener(
+					new View.OnClickListener() {
 				@Override
 				public void onClick(View v)
 				{
-					fireMessage(position);
+					//sendNotification(mAuctions.get(position));
+					//fireMessage(position);
+					fireMessageWithImage(position);
+
+
 				}
 			});
 			return convertView;

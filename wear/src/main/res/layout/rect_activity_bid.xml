@@ -6,47 +6,57 @@
     android:orientation="vertical"
     tools:context="planbdevs.wearableApp.activities.BidActivity"
     tools:deviceIds="wear_square"
-    android:background="@drawable/card_background"
+    android:id="@+id/llBidContainer"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="The current bid is, "
-        android:id="@+id/tvBidCurrentLabel"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$1,384.84"
-        android:id="@+id/tvBidCurrentValue"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/max_bid_header"
-        android:id="@+id/tvBidHeader"
-        android:layout_gravity="center_horizontal"/>
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:id="@+id/npMaxBid"
-        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="#A6ffffff"
         android:layout_weight="1"
-        android:layout_marginBottom="5dp"
-        />
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The current bid is, "
+            android:id="@+id/tvBidCurrentLabel"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$1,384.84"
+            android:id="@+id/tvBidCurrentValue"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/max_bid_header"
+            android:id="@+id/tvBidHeader"
+            android:layout_gravity="center_horizontal"/>
+
+        <NumberPicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/npMaxBid"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
+            />
+
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:text="Submit"
         android:id="@+id/bnBidSubmit"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|bottom|fill_horizontal"
         android:background="@drawable/button"
+        android:layout_weight="0"
         />
-
 
 </LinearLayout>

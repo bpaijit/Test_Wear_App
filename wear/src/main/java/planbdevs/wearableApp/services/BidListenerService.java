@@ -11,9 +11,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.FreezableUtils;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataItemAsset;
 import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -24,13 +28,14 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import planbdevs.wearableApp.activities.BidActivity;
 import planbdevs.wearableApp.classes.AuctionItemWear;
 
 
-public class BidListenerService extends WearableListenerService
+public class BidListenerService extends WearableListenerService implements DataApi.DataListener, GoogleApiClient.ConnectionCallbacks
 {
 	private static final String TAG = "BidListenerService";
 	private static final String START_ACTIVITY_PATH = "/start-bid-activity";
@@ -45,14 +50,36 @@ public class BidListenerService extends WearableListenerService
 
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 				.addApi(Wearable.API)
+				.addConnectionCallbacks(this)
 				.build();
+
 		mGoogleApiClient.connect();
 	}
+
+
 
 	@Override
 	public void onDataChanged(DataEventBuffer dataEvents)
 	{
 		LogD("onDataChanged");
+
+		for(DataEvent dataEvent : dataEvents)
+		{
+			DataItem item = dataEvent.getDataItem();
+			DataMapItem dataMapItem = DataMapItem.fromDataItem(item);
+			Asset image = dataMapItem.getDataMap().getAsset("image");
+
+			DataMap map = dataMapItem.getDataMap();
+
+			Intent iBid = new Intent(this, BidActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("id", map.getInt("id"));
+			bundle.putFloat("bid", map.getFloat("bid"));
+			bundle.putByteArray("image", getBitmapBytesFromAsset(image));
+			iBid.putExtra("extras", bundle);
+			iBid.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(iBid);
+		}
 	}
 
 	@Override
@@ -115,5 +142,17 @@ public class BidListenerService extends WearableListenerService
 		}
 
 		return returnBitmap;
+	}
+
+	@Override
+	public void onConnected(Bundle bundle)
+	{
+		Wearable.DataApi.addListener(mGoogleApiClient, this);
+	}
+
+	@Override
+	public void onConnectionSuspended(int i)
+	{
+
 	}
 }

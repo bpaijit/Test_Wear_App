@@ -15,7 +15,7 @@
     <string name="title_activity_bid">BidActivity</string>
     <string name="highes_bidder">You are now the highest bidder</string>
     <string name="bid_path">/Bid</string>
-    <string name="key_highestbid">highestBid_key</string>
-    <string name="key_auctionId">auctionId_key</string>
+    <string name="key_highestbid">bid</string>
+    <string name="key_auctionId">id</string>
 
 </resources>
